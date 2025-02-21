@@ -1,3 +1,6 @@
+import {} from '../components/dialogs/uploadFileDialog';
+import {} from '../utils/synoApiProvider';
+import {} from '../utils/updateHelper';
 export default Ext.define('SYNOCOMMUNITY.RRManager.Overview.Main', {
   extend: 'SYNO.ux.Panel',
   helper: SYNOCOMMUNITY.RRManager.Helper,

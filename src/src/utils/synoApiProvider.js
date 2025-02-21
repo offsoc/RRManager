@@ -1,3 +1,5 @@
+// Namespace definition
+Ext.ns('SYNOCOMMUNITY.RRManager');
 export default SYNOCOMMUNITY.RRManager.SynoApiProvider = {
   sendWebAPI: null,
   _prefix: '/webman/3rdparty/rr-manager/scripts/',

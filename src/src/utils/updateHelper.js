@@ -1,3 +1,5 @@
+// Namespace definition
+Ext.ns('SYNOCOMMUNITY.RRManager');
 export default SYNOCOMMUNITY.RRManager.UpdateHelper = {
   init: function (apiProvider, findAppWindow) {
     this.apiProvider = apiProvider;
