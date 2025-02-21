@@ -1,27 +1,22 @@
 import AppWindow from './appWindow';
-
-//tab main
-import Main from './tabs/main';
-import HealthPanel from './panels/healthPanel';
-import statusBoxTmpl from './components/statusBoxTmpl';
-import statusBox from './components/statusBox';
-import StatusBoxsPanel from './panels/statusBoxsPanel';
-
-//tab addons
-import Addons from './tabs/addons';
 import AdvancedSearchField from './components/advancedSearchField';
-
-//tab settings(configuration)
-import Settings from './tabs/setting';
+import statusBox from './components/statusBox';
+import statusBoxTmpl from './components/statusBoxTmpl';
+import DebugGeneralTab from './panels/debug/generalTab';
+import HealthPanel from './panels/healthPanel';
 import SettingsGeneralTab from './panels/settings/generalTab';
 import RRConfigTab from './panels/settings/rrConfigTab';
-import SynoInfoTab from './panels/settings/synoInfoTab';
 import RrManagerConfigTab from './panels/settings/rrManagerConfigTab';
-
+import SynoInfoTab from './panels/settings/synoInfoTab';
+import StatusBoxsPanel from './panels/statusBoxsPanel';
+//tab addons
+import Addons from './tabs/addons';
 //tab debug
 import Debug from './tabs/debug';
-import DebugGeneralTab from './panels/debug/generalTab';
-
+//tab main
+import Main from './tabs/main';
+//tab settings(configuration)
+import Settings from './tabs/setting';
 //tab ssh
 import Ssh from './tabs/ssh';
 
@@ -32,15 +27,15 @@ Ext.define('SYNOCOMMUNITY.RRManager.AppInstance', {
     extend: 'SYNO.SDS.AppInstance',
     appWindowName: 'SYNOCOMMUNITY.RRManager.AppWindow',
     constructor: function () {
-        this.callParent(arguments)
+        this.callParent(arguments);
     }
 });
 
 SYNOCOMMUNITY.RRManager.SetEmptyIcon = (e, t) => {
-    let i = e.el.child(".contentwrapper");
+    let i = e.el.child('.contentwrapper');
     if (i) {
-        for (; i.child(".contentwrapper");)
-            i = i.child(".contentwrapper");
-        t && !i.hasClass("san-is-empty") ? i.addClass("san-is-empty") : !t && i.hasClass("san-is-empty") && i.removeClass("san-is-empty")
+        for (; i.child('.contentwrapper');)
+            {i = i.child('.contentwrapper');}
+        t && !i.hasClass('san-is-empty') ? i.addClass('san-is-empty') : !t && i.hasClass('san-is-empty') && i.removeClass('san-is-empty');
     }
 };

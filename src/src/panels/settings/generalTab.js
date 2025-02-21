@@ -1,19 +1,19 @@
 export default
-    Ext.define("SYNOCOMMUNITY.RRManager.Setting.GeneralTab", {
-        extend: "SYNO.SDS.Utils.FormPanel",
+    Ext.define('SYNOCOMMUNITY.RRManager.Setting.GeneralTab', {
+        extend: 'SYNO.SDS.Utils.FormPanel',
         constructor: function (e) {
-            this.callParent([this.fillConfig(e)])
+            this.callParent([this.fillConfig(e)]);
         },
         fillConfig: function (e) {
             this.suspendLcwPrompt = !1;
             const t = {
-                title: "General",
+                title: 'General',
                 items: [{
-                    xtype: "syno_fieldset",
-                    title: "Device Info",
-                    itemId: "lcw",
-                    name: "lcw",
-                    id: "lcw",
+                    xtype: 'syno_fieldset',
+                    title: 'Device Info',
+                    itemId: 'lcw',
+                    name: 'lcw',
+                    id: 'lcw',
                     items: [
                         {
                             fieldLabel: 'model',
@@ -90,10 +90,10 @@ export default
                 ]
             };
             return Ext.apply(t, e),
-                t
+                t;
         },
         initEvents: function () {
-            this.mon(this, "activate", this.onActivate, this)
+            this.mon(this, 'activate', this.onActivate, this);
         },
         onActivate: function () {
         },
@@ -103,22 +103,22 @@ export default
         promptLcwDialog: function (e, t) {
             t && !this.suspendLcwPrompt && this.appWin.getMsgBox().show({
                 title: this.title,
-                msg: "ddd",
+                msg: 'ddd',
                 buttons: {
                     yes: {
                         text: Ext.MessageBox.buttonText.yes,
-                        btnStyle: "red"
+                        btnStyle: 'red'
                     },
                     no: {
                         text: Ext.MessageBox.buttonText.no
                     }
                 },
                 fn: function (e) {
-                    "yes" !== e && this.form.findField("lcw_enabled").setValue(!1)
+                    'yes' !== e && this.form.findField('lcw_enabled').setValue(!1);
                 },
                 scope: this,
                 icon: Ext.MessageBox.ERRORRED,
                 minWidth: Ext.MessageBox.minWidth
-            })
+            });
         }
     });

@@ -1,6 +1,6 @@
 export default
-    Ext.define("SYNOCOMMUNITY.RRManager.Overview.UploadFileDialog", {
-        extend: "SYNO.SDS.ModalWindow",
+    Ext.define('SYNOCOMMUNITY.RRManager.Overview.UploadFileDialog', {
+        extend: 'SYNO.SDS.ModalWindow',
         constructor: function (a) {
             this.helper = a.helper;
             this.updateHelper = a.updateHelper;
@@ -14,21 +14,21 @@ export default
                 width: 500,
                 height: 400,
                 resizable: false,
-                layout: "fit",
+                layout: 'fit',
                 items: this.createUploadPannel(),
                 buttons: [
                     {
-                        xtype: "syno_button",
-                        text: this.helper.T("common", "alt_cancel"),
+                        xtype: 'syno_button',
+                        text: this.helper.T('common', 'alt_cancel'),
                         scope: this,
                         handler: function () {
-                            Ext.getCmp("upload_file_dialog")?.close();
+                            Ext.getCmp('upload_file_dialog')?.close();
                         },
                     },
                     {
-                        xtype: "syno_button",
-                        text: this.helper.T("common", "submit"),
-                        btnStyle: "blue",
+                        xtype: 'syno_button',
+                        text: this.helper.T('common', 'submit'),
+                        btnStyle: 'blue',
                         scope: this,
                         handler: this.onClickSubmit.bind(this),
                     },
@@ -53,7 +53,7 @@ export default
             }
             this.showProgressIndicator();
             this.onUploadFile(fileObject);
-            Ext.getCmp("upload_file_dialog")?.close();
+            Ext.getCmp('upload_file_dialog')?.close();
         },
         showProgressIndicator: function () {
             this.owner.setStatusBusy();
@@ -72,11 +72,11 @@ export default
         },
         showMsg: function (msg) {
             let parent = this.owner ?? this.parent?.appWin;
-            parent.getMsgBox().alert("", msg);
+            parent.getMsgBox().alert('', msg);
         },
         createUploadPannel: function () {
             this.uploadForm = new Ext.form.FormPanel({
-                title: this.helper.V("upload_file_dialog", "lb_select_update_file"),
+                title: this.helper.V('upload_file_dialog', 'lb_select_update_file'),
                 fileUpload: true,
                 name: 'upload_form',
                 border: !1,
@@ -92,7 +92,7 @@ export default
         },
         opts: {
             chunkmode: false,
-            filefiledname: "file",
+            filefiledname: 'file',
             file: function (file) {
                 var createFileObject = function (file, params, id, dtItem) {
                     var modifiedParams = SYNO.SDS.copy(params || {});
@@ -111,11 +111,11 @@ export default
                         name: file.name || file.fileName,
                         size: file.size || file.fileSize,
                         progress: 0,
-                        status: "NOT_STARTED",
+                        status: 'NOT_STARTED',
                         params: modifiedParams,
                         chunkmode: false
                     };
-                }
+                };
 
                 var lastModifiedTime = SYNO.webfm.utils.getLastModifiedTime(file);
                 var fileObject = new createFileObject(file, { mtime: lastModifiedTime });
@@ -133,12 +133,12 @@ export default
             this.opts.params.path = `/${rrManagerConfig.SHARE_NAME}/${rrManagerConfig.RR_TMP_DIR}`;
             let isChunkMode = false;
             if (-1 !== this.MAX_POST_FILESIZE && file.size > this.MAX_POST_FILESIZE && isChunkMode)
-                this.onError({
+                {this.onError({
                     errno: {
-                        section: "error",
-                        key: "upload_too_large"
+                        section: 'error',
+                        key: 'upload_too_large'
                     }
-                }, file);
+                }, file);}
             else {
                 let formData = this.prepareStartFormdata(file);
                 if (file.chunkmode) {
@@ -148,16 +148,16 @@ export default
                         start: 0,
                         index: 0,
                         total: totalChunks
-                    })
+                    });
                 } else
-                    this.sendArray(formData, file)
+                    {this.sendArray(formData, file);}
             }
         },
         prepareStartFormdata: function (file) {
             const isChunkMode = (-1 !== this.MAX_POST_FILESIZE && file.size > this.MAX_POST_FILESIZE);
             if (isChunkMode) {
                 const boundary = `----html5upload-${new Date().getTime()}${Math.floor(65535 * Math.random())}`;
-                let contentPrefix = "";
+                let contentPrefix = '';
 
                 if (this.opts.params) {
                     for (const paramName in this.opts.params) {
@@ -181,7 +181,7 @@ export default
 
                 const filename = unescape(encodeURIComponent(file.name));
                 contentPrefix += `--${boundary}\r\n`;
-                contentPrefix += `Content-Disposition: form-data; name="${this.opts.filefiledname || "file"}"; filename="${filename}"\r\n`;
+                contentPrefix += `Content-Disposition: form-data; name="${this.opts.filefiledname || 'file'}"; filename="${filename}"\r\n`;
                 contentPrefix += 'Content-Type: application/octet-stream\r\n\r\n';
 
                 return {
@@ -214,7 +214,7 @@ export default
             i.start = i.index * this.opts.chunksize;
             var chunkSize = Math.min(this.opts.chunksize, t.size - i.start);
 
-            if ("PROCESSING" === t.status) {
+            if ('PROCESSING' === t.status) {
                 var fileSlice;
 
                 if (window.File && File.prototype.slice) {
@@ -237,30 +237,30 @@ export default
             var headers = {}, requestParams = {};
             var uploadData;
 
-            if (fileDetails.status !== "CANCEL") {
+            if (fileDetails.status !== 'CANCEL') {
                 if (fileDetails.chunkmode) {
                     headers = {
-                        "Content-Type": "multipart/form-data; boundary=" + formData.boundary
+                        'Content-Type': 'multipart/form-data; boundary=' + formData.boundary
                     };
                     requestParams = {
-                        "X-TYPE-NAME": "SLICEUPLOAD",
-                        "X-FILE-SIZE": fileDetails.size,
-                        "X-FILE-CHUNK-END": chunkDetails.total <= 1 || chunkDetails.index === chunkDetails.total - 1 ? "true" : "false"
+                        'X-TYPE-NAME': 'SLICEUPLOAD',
+                        'X-FILE-SIZE': fileDetails.size,
+                        'X-FILE-CHUNK-END': chunkDetails.total <= 1 || chunkDetails.index === chunkDetails.total - 1 ? 'true' : 'false'
                     };
                     if (tempFile) {
                         Ext.apply(requestParams, {
-                            "X-TMP-FILE": tempFile
+                            'X-TMP-FILE': tempFile
                         });
                     }
                     if (window.XMLHttpRequest.prototype.sendAsBinary) {
-                        uploadData = formData.formdata + (fileData !== "" ? fileData : "") + "\r\n--" + formData.boundary + "--\r\n";
+                        uploadData = formData.formdata + (fileData !== '' ? fileData : '') + '\r\n--' + formData.boundary + '--\r\n';
                     } else if (window.Blob) {
-                        var data = new Uint8Array(formData.formdata.length + fileData.length + "\r\n--" + formData.boundary + "--\r\n".length);
-                        data.set(new TextEncoder().encode(formData.formdata + fileData + "\r\n--" + formData.boundary + "--\r\n"));
+                        var data = new Uint8Array(formData.formdata.length + fileData.length + '\r\n--' + formData.boundary + '--\r\n'.length);
+                        data.set(new TextEncoder().encode(formData.formdata + fileData + '\r\n--' + formData.boundary + '--\r\n'));
                         uploadData = data;
                     }
                 } else {
-                    formData.append("size", fileDetails.size);
+                    formData.append('size', fileDetails.size);
                     fileDetails.name
                         ? formData.append(this.opts.filefiledname, fileDetails, fileDetails.name)
                         : formData.append(this.opts.filefiledname, fileDetails.file);
@@ -293,10 +293,10 @@ export default
                     },
                     progress: (progressEvent) => {
                         const percentage = ((progressEvent.loaded / progressEvent.total) * 100).toFixed(2);
-                        let loader = document.getElementsByClassName("x-loading-message-inner");
+                        let loader = document.getElementsByClassName('x-loading-message-inner');
                         if (loader?.length > 0) {
                             loader = loader[0];
-                            loader.textContent = `${self.helper.T("common", "loading")}. ${self.helper.V("upload_file_dialog", "completed")} ${percentage}%.`;
+                            loader.textContent = `${self.helper.T('common', 'loading')}. ${self.helper.V('upload_file_dialog', 'completed')} ${percentage}%.`;
                         }
                     },
                 });

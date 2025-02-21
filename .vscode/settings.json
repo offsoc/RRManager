@@ -1,0 +1,66 @@
+{
+    // Code formatting settings
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": false,
+
+    // Default formatter for different languages
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[csharp]": {
+      "editor.defaultFormatter": "ms-dotnettools.csharp"
+    },
+
+    // ESLint configuration for JavaScript and TypeScript
+    "eslint.validate": [
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact"
+    ],
+
+    // Enable linting on save
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit",
+      "source.fixAll": "explicit"
+    },
+
+    // Prettier configuration for consistent formatting
+    "prettier.printWidth": 100,
+    "prettier.singleQuote": true,
+    "prettier.trailingComma": "es5",
+    "prettier.tabWidth": 2,
+    "prettier.useTabs": false,
+    "prettier.arrowParens": "avoid",
+
+    // Organize imports on save for TypeScript and JavaScript
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true,
+      "source.fixAll": true
+    },
+
+    // C# specific settings
+    "omnisharp.enableRoslynAnalyzers": true,
+    "omnisharp.enableEditorConfigSupport": true,
+    "omnisharp.organizeImportsOnFormat": true,
+    "csharp.format.enable": true,
+
+    // Editor-specific preferences
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,
+
+    // Word wrap settings for better readability
+    "editor.wordWrap": "on",
+
+    // Show spaces and tabs for consistency
+    "editor.renderWhitespace": "all",
+
+    // Enable bracket colorization for better code readability
+    "editor.bracketPairColorization.enabled": true,
+    "dotnet.preferCSharpExtension": true
+  }

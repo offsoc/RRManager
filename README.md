@@ -19,6 +19,9 @@ RRManager is a Redpill Recovery DSM application aimed to provide the ability to 
 That app is built on the `DSM` UI framework: `Ext.Js 3.4`.
 I didn't find documentaion regarding that framework, so I spent a lot of time to reserch how to build ui and call DSM actions utilyzing that approach. That is why the ui is so unperfect))
 
+### Development
+1. 
+
 # Installation
 1. Download RR Manager spk file from github
 2. Install SPK, specify the path to store RR artifacts

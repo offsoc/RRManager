@@ -1,22 +1,22 @@
 export default
-    Ext.define("SYNOCOMMUNITY.RRManager.AdvancedSearchField", {
-        extend: "SYNO.ux.SearchField",
+    Ext.define('SYNOCOMMUNITY.RRManager.AdvancedSearchField', {
+        extend: 'SYNO.ux.SearchField',
         initEvents: function () {
             this.callParent(arguments),
-                this.mon(Ext.getDoc(), "mousedown", this.onMouseDown, this),
-                this.mon(this, "keypress", (function (e, t) {
+                this.mon(Ext.getDoc(), 'mousedown', this.onMouseDown, this),
+                this.mon(this, 'keypress', (function (e, t) {
                     t.getKey() === Ext.EventObject.ENTER && (this.searchPanel?.setKeyWord(this.getValue()),
-                        this.searchPanel?.onSearch())
+                        this.searchPanel?.onSearch());
                 }
                 ), this),
-                this.mon(this, "destroy", (function () {
-                    this.searchPanel?.destroy()
+                this.mon(this, 'destroy', (function () {
+                    this.searchPanel?.destroy();
                 }
-                ), this)
+                ), this);
         },
         isInnerComponent: function (event, form) {
             let isInside = false;
-            if (event.getTarget(".syno-datetimepicker-inner-menu")) {
+            if (event.getTarget('.syno-datetimepicker-inner-menu')) {
                 isInside = true;
             }
             form.items.each((item) => {
@@ -40,15 +40,15 @@ export default
         },
         onMouseDown: function (e) {
             const t = this.searchPanel;
-            !t || !t.isVisible() || t.inEl || e.within(t.getEl()) || e.within(this.searchtrigger) || this.isInnerComponent(e, this.searchPanel.getForm()) || t.hide()
+            !t || !t.isVisible() || t.inEl || e.within(t.getEl()) || e.within(this.searchtrigger) || this.isInnerComponent(e, this.searchPanel.getForm()) || t.hide();
         },
         onSearchTriggerClick: function () {
-            this.searchPanel.isVisible() ? this.searchPanel.hide() : (this.searchPanel.getEl().alignTo(this.wrap, "tr-br?", [6, 0]),
+            this.searchPanel.isVisible() ? this.searchPanel.hide() : (this.searchPanel.getEl().alignTo(this.wrap, 'tr-br?', [6, 0]),
                 this.searchPanel.show(),
-                this.searchPanel.setKeyWord(this.getValue()))
+                this.searchPanel.setKeyWord(this.getValue()));
         },
         onTriggerClick: function () {
             this.callParent(),
-                this.searchPanel.onReset()
+                this.searchPanel.onReset();
         }
     });

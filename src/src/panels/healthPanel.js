@@ -1,7 +1,7 @@
-import synoApiProvider from "../utils/synoApiProvider";
+import synoApiProvider from '../utils/synoApiProvider';
 export default
-    Ext.define("SYNOCOMMUNITY.RRManager.Overview.HealthPanel", {
-        extend: "SYNO.ux.Panel",
+    Ext.define('SYNOCOMMUNITY.RRManager.Overview.HealthPanel', {
+        extend: 'SYNO.ux.Panel',
         apiProvider: SYNOCOMMUNITY.RRManager.SynoApiProvider,
         constructor: function (e) {
             this.appWin = e.appWin;
@@ -11,16 +11,16 @@ export default
             this.callParent([this.fillConfig(e)]);
         },
         onDataReady: function () {
-            let status = "normal";
-            this.iconTemplate.overwrite(this.getComponent("icon").getEl(), { status: status, 
+            let status = 'normal';
+            this.iconTemplate.overwrite(this.getComponent('icon').getEl(), { status: status, 
                 style:"background-image:url('webapi/entry.cgi?api=SYNO.Core.Synohdpack&version=1&method=getHDIcon&res=72&retina=false&path=webman/3rdparty/rr-manager/images/rr-manager-{0}.png&app_version=0.1'); background-size: cover;"
             }),
-                this.titleTemplate.overwrite(this.upperPanel.getComponent("title").getEl(), {
+                this.titleTemplate.overwrite(this.upperPanel.getComponent('title').getEl(), {
                     status: status,
                 }),
-                this.updateDescription("current");
+                this.updateDescription('current');
             // this.getComponent("rrActionsPanel")?.setVisible(true);
-            this.owner.fireEvent("data_ready");
+            this.owner.fireEvent('data_ready');
         },
 
 
@@ -37,19 +37,19 @@ export default
             };
 
             const panelConfig = {
-                layout: "hbox",
-                cls: "iscsi-overview-health-panel",
+                layout: 'hbox',
+                cls: 'iscsi-overview-health-panel',
                 autoHeight: true,
                 items: [
-                    { xtype: "box", itemId: "icon", cls: "health-icon-block" },
+                    { xtype: 'box', itemId: 'icon', cls: 'health-icon-block' },
                     {
-                        xtype: "syno_panel",
-                        itemId: "rightPanel",
-                        cls: "health-text-block",
+                        xtype: 'syno_panel',
+                        itemId: 'rightPanel',
+                        cls: 'health-text-block',
                         flex: 1,
                         height: 90,
-                        layout: "vbox",
-                        layoutConfig: { align: "stretch" },
+                        layout: 'vbox',
+                        layoutConfig: { align: 'stretch' },
                         items: [this.upperPanel, this.lowerPanel],
                     }
                 ],
@@ -70,9 +70,9 @@ export default
                     compiled: !0,
                     disableFormats: !0,
                     statusText: {
-                        normal: "Healthy",
-                        warning: "Warning",
-                        error: "Error"
+                        normal: 'Healthy',
+                        warning: 'Warning',
+                        error: 'Error'
                     },
                     getStatusText: function (e) {
                         return this.statusText[e];
@@ -82,31 +82,31 @@ export default
         },
         createUpperPanel: function () {
             return new SYNO.ux.Panel({
-                layout: "hbox",
+                layout: 'hbox',
                 items: [
                     {
-                        xtype: "box",
-                        itemId: "title",
+                        xtype: 'box',
+                        itemId: 'title',
                         flex: 1,
-                        cls: "iscsi-overview-health-title-block",
+                        cls: 'iscsi-overview-health-title-block',
                     },
                     {
-                        xtype: "syno_button",
-                        itemId: "leftBtn",
+                        xtype: 'syno_button',
+                        itemId: 'leftBtn',
                         hidden: !0,
-                        cls: "iscsi-overview-health-prev-btn",
+                        cls: 'iscsi-overview-health-prev-btn',
                         scope: this,
                         handler: this.onLeftBtnClick,
-                        text: " ",
+                        text: ' ',
                     },
                     {
-                        xtype: "syno_button",
-                        itemId: "rightBtn",
+                        xtype: 'syno_button',
+                        itemId: 'rightBtn',
                         hidden: !0,
-                        cls: "iscsi-overview-health-next-btn",
+                        cls: 'iscsi-overview-health-next-btn',
                         scope: this,
                         handler: this.onRightBtnClick,
-                        text: " ",
+                        text: ' ',
                     },
                 ],
             });
@@ -116,9 +116,9 @@ export default
                 flex: 1,
                 items: [
                     {
-                        xtype: "syno_displayfield",
-                        itemId: "desc",
-                        cls: "health-text-content",
+                        xtype: 'syno_displayfield',
+                        itemId: 'desc',
+                        cls: 'health-text-content',
                         htmlEncode: !1,
                     },
                 ],
@@ -132,11 +132,11 @@ export default
                 index = -1;
             const
                 descriptionCount = this.descriptions.length,
-                rightPanel = this.getComponent("rightPanel"),
-                descriptionField = this.lowerPanel.getComponent("desc"),
-                rrVersionField = this.lowerPanel.getComponent("desc2"),
-                leftButton = this.upperPanel.getComponent("leftBtn"),
-                rightButton = this.upperPanel.getComponent("rightBtn");
+                rightPanel = this.getComponent('rightPanel'),
+                descriptionField = this.lowerPanel.getComponent('desc'),
+                rrVersionField = this.lowerPanel.getComponent('desc2'),
+                leftButton = this.upperPanel.getComponent('leftBtn'),
+                rightButton = this.upperPanel.getComponent('rightBtn');
                 initialHeight = descriptionField.getHeight();
             let panelHeight = rightPanel.getHeight(),
                 isHeightChanged = false;
@@ -149,7 +149,7 @@ export default
                     isHeightChanged && ((rightPanel.height = panelHeight), this.doLayout(), this.owner.doLayout()),
                     this.descriptions.length <= 1)
             )
-                return leftButton.hide(), void rightButton.hide();
+                {return leftButton.hide(), void rightButton.hide();}
             (leftButton.hidden || rightButton.hidden) && (leftButton.show(), rightButton.show(), this.doLayout());
         },
         prepareSummaryStatus: function (status, data) {

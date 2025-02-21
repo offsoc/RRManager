@@ -1,5 +1,5 @@
-Ext.define("SYNOCOMMUNITY.RRManager.IframePanel", {
-    extend: "SYNO.ux.Panel",    
+Ext.define('SYNOCOMMUNITY.RRManager.IframePanel', {
+    extend: 'SYNO.ux.Panel',    
     constructor: function (config) {
         this.callParent([this.fillConfig(config)]);
     },
@@ -9,9 +9,9 @@ Ext.define("SYNOCOMMUNITY.RRManager.IframePanel", {
         const cfg = {
             items: [
                 {
-                    itemId: "iframeBox",
-                    xtype: "box",
-                    cls: "iframe-panel",
+                    itemId: 'iframeBox',
+                    xtype: 'box',
+                    cls: 'iframe-panel',
                     height: '600',
                     html: '<iframe src="' + (config.iframeSrc || '') + '" style="width:100%; height:100%; border:none;"></iframe>',
                 }
@@ -28,11 +28,11 @@ Ext.define("SYNOCOMMUNITY.RRManager.IframePanel", {
     
     onAfterRender: function () {
         // Example: Add a click event listener if needed
-        this.mon(this.body, "click", this.onMouseClick, this);
+        this.mon(this.body, 'click', this.onMouseClick, this);
     },
     
     updateIframe: function () {
-        const iframeBox = this.getComponent("iframeBox");
+        const iframeBox = this.getComponent('iframeBox');
         iframeBox.update('<iframe src="' + this.iframeSrc + '" style="width:100%; height:100%; border:none;"></iframe>');
     },
     
@@ -47,6 +47,6 @@ Ext.define("SYNOCOMMUNITY.RRManager.IframePanel", {
     
     onMouseClick: function () {
         // Example: Fire an event when the iframe panel is clicked
-        this.fireEvent("iframeclick", this);
+        this.fireEvent('iframeclick', this);
     }
 });

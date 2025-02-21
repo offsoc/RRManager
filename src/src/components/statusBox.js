@@ -1,6 +1,6 @@
 export default
-    Ext.define("SYNOCOMMUNITY.RRManager.Overview.StatusBox", {
-        extend: "SYNO.ux.Panel",
+    Ext.define('SYNOCOMMUNITY.RRManager.Overview.StatusBox', {
+        extend: 'SYNO.ux.Panel',
         constructor: function (e) {
             this.callParent([this.fillConfig(e)]);
         },
@@ -15,10 +15,10 @@ export default
             const t = {
                 items: [
                     {
-                        itemId: "statusBox",
-                        xtype: "box",
-                        cls: "iscsi-overview-statusbox-block",
-                        html: "",
+                        itemId: 'statusBox',
+                        xtype: 'box',
+                        cls: 'iscsi-overview-statusbox-block',
+                        html: '',
                     },
                 ],
                 data: this.data,
@@ -32,16 +32,16 @@ export default
             return Ext.apply(t, e), t;
         },
         onAfterRender: function () {
-            this.mon(this.body, "click", this.onMouseClick, this);
+            this.mon(this.body, 'click', this.onMouseClick, this);
         },
         updateTpl: function () {
             this.tpl.overwrite(
-                this.getComponent("statusBox").getEl(),
+                this.getComponent('statusBox').getEl(),
                 Ext.apply(
                     {
                         type: this.type,
                         clickType:
-                            this.owner.clickedBox === this.type ? "click" : "unclick",
+                            this.owner.clickedBox === this.type ? 'click' : 'unclick',
                         errorlevel: this.errorlevel,
                         total: this?.data?.icon,
                         error: 0,
@@ -52,12 +52,12 @@ export default
             );
         },
         onMouseClick: function () {
-            this.owner.fireEvent("selectchange", this.type);
+            this.owner.fireEvent('selectchange', this.type);
         },
         processRRSummary: function () {
             const luns = [1, 2];
             Ext.each(luns, function (lun) {
-                let status = "healthy";
+                let status = 'healthy';
                 this.data[status]++;
             }, this);
         },
@@ -65,14 +65,14 @@ export default
         processHWSummary: function () {
             const luns = [1, 2];
             Ext.each(luns, function (lun) {
-                let status = "healthy";
+                let status = 'healthy';
                 this.data[status]++;
             }, this);
         },
         processRRMSummary: function () {
             const luns = [1, 2];
             Ext.each(luns, function (lun) {
-                let status = "healthy";
+                let status = 'healthy';
                 this.data[status]++;
             }, this);
         },
@@ -80,16 +80,16 @@ export default
             this.data = { error: 0, warning: 0, healthy: 0 };
             Ext.apply(this.data, this.tpl.data);
             switch (this.storeKey) {
-                case "hwinfo_summ":
+                case 'hwinfo_summ':
                     this.processHWSummary();
                     break;
-                case "rrinfo_summ":
+                case 'rrinfo_summ':
                     this.processRRSummary();
                     break;
-                case "rrminfo_summ":
+                case 'rrminfo_summ':
                     this.processRRMSummary();
             }
-            this.data.errorlevel = "healthy";
+            this.data.errorlevel = 'healthy';
             this.updateTpl();
         },
     });

@@ -1,6 +1,6 @@
 export default
-    Ext.define("SYNOCOMMUNITY.RRManager.Overview.StatusBoxTmpl", {
-        extend: "Ext.XTemplate",
+    Ext.define('SYNOCOMMUNITY.RRManager.Overview.StatusBoxTmpl', {
+        extend: 'Ext.XTemplate',
         helper: SYNOCOMMUNITY.RRManager.Helper,
         formatString: function (str, ...args) {
             return str.replace(/{(\d+)}/g, function (match, number) {
@@ -8,7 +8,7 @@ export default
             });
         },
         constructor: function (e) {
-            let t = "";
+            let t = '';
             switch (e.type) {
                 case 'hw_info':
                     t = this.createTplHwInfo();
@@ -73,24 +73,24 @@ export default
                 '<div class="statusbox-titlebar"></div>',
                 '<div class="statusbox-box">',
                 '<div class="statusbox-title">',
-                "<h3>{[ values.title ]} </h3>",
-                "</div>",
+                '<h3>{[ values.title ]} </h3>',
+                '</div>',
                 '<div class="statusbox-title-right">',
-                "<h3>{[ this.showNumber(values.total) ]}</h3>",
-                "</div>",
+                '<h3>{[ this.showNumber(values.total) ]}</h3>',
+                '</div>',
                 '<div class="x-clear"></div>',
                 '<div class="statusbox-title-padding">',
-                "</div>",
+                '</div>',
                 '<tpl if="! this.isBothErrorWarn(error, warning)">',
                 '<div class="statusbox-block statusbox-block-{errorlevel}">',
                 '</div>',
                 '<div class="statusbox-text" ext:qtip="{[ values.text ]}">{[ values.text ]}</div>',
                 '<div class="statusbox-text" ext:qtip="{[ values.text2 ]}">{[ values.text2 ]}</div>',
                 '<div class="statusbox-text" ext:qtip="{[ values.text3 ]}">{[ values.text3 ]}</div>',
-                "</div>",
-                "</tpl>",
-                "</div>",
-                "</div>",
+                '</div>',
+                '</tpl>',
+                '</div>',
+                '</div>',
             ];
         },
         createTplRrInfo: function () {
@@ -99,24 +99,24 @@ export default
                 '<div class="statusbox-titlebar"></div>',
                 '<div class="statusbox-box">',
                 '<div class="statusbox-title">',
-                "<h3>{[ values.title ]} </h3>",
-                "</div>",
+                '<h3>{[ values.title ]} </h3>',
+                '</div>',
                 '<div class="statusbox-title-right">',
-                "<h3>{[ this.showNumber(values.total) ]}</h3>",
+                '<h3>{[ this.showNumber(values.total) ]}</h3>',
 
-                "</div>",
+                '</div>',
                 '<div class="x-clear"></div>',
                 '<div class="statusbox-title-padding">',
-                "</div>",
+                '</div>',
                 '<tpl if="! this.isBothErrorWarn(error, warning)">',
                 '<div class="statusbox-block statusbox-block-{errorlevel}">',
                 '<div class="statusbox-number">{[ values.rrVersion ]}',
                 '</div>',
                 '<div class="statusbox-text" ext:qtip="{[ values.rrVersion ]}">{[ values.rrRelease ]}</div>',
-                "</div>",
-                "</tpl>",
-                "</div>",
-                "</div>",
+                '</div>',
+                '</tpl>',
+                '</div>',
+                '</div>',
             ];
         },
         createTplRrmInfo: function () {
@@ -125,23 +125,23 @@ export default
                 '<div class="statusbox-titlebar"></div>',
                 '<div class="statusbox-box">',
                 '<div class="statusbox-title">',
-                "<h3>{[ values.title ]} </h3>",
-                "</div>",
+                '<h3>{[ values.title ]} </h3>',
+                '</div>',
                 '<div class="statusbox-title-right">',
-                "<h3>{[ this.showNumber(values.total) ]}</h3>",
-                "</div>",
+                '<h3>{[ this.showNumber(values.total) ]}</h3>',
+                '</div>',
                 '<div class="x-clear"></div>',
                 '<div class="statusbox-title-padding">',
-                "</div>",
+                '</div>',
                 '<tpl if="! this.isBothErrorWarn(error, warning)">',
                 '<div class="statusbox-block statusbox-block-{errorlevel}">',
                 '<div class="statusbox-number">{[ values.rrManagerVersion ]}',
                 '</div>',
                 '<div class="statusbox-text" ext:qtip="{[ values.rrManagerVersion ]}"></div>',
-                "</div>",
-                "</tpl>",
-                "</div>",
-                "</div>",
+                '</div>',
+                '</tpl>',
+                '</div>',
+                '</div>',
             ];
         },
     });

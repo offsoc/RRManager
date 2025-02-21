@@ -1,5 +1,5 @@
-import helper from './utils/updateWizardHelper';
 import SynoApiProvider from './utils/synoApiProvider';
+import helper from './utils/updateWizardHelper';
 // Namespace definition
 Ext.ns('SYNOCOMMUNITY.RRManager');
 export default
@@ -12,8 +12,8 @@ export default
                 return typeof args[number] !== 'undefined' ? args[number] : match;
             });
         },
-        extend: "SYNO.SDS.PageListAppWindow",
-        activePage: "SYNOCOMMUNITY.RRManager.Overview.Main",
+        extend: 'SYNO.SDS.PageListAppWindow',
+        activePage: 'SYNOCOMMUNITY.RRManager.Overview.Main',
         defaultWinSize: { width: 1160, height: 620 },
         constructor: function (config) {
             const t = this;
@@ -27,12 +27,12 @@ export default
             const showConsoleTab = jsConfig?.enableTTYDTab;
             let tabs = this.getListTabs(showConsoleTab);
             const i = {
-                cls: "syno-app-iscsi",
+                cls: 'syno-app-iscsi',
                 width: this.defaultWinSize.width,
                 height: this.defaultWinSize.height,
                 minWidth: this.defaultWinSize.width,
                 minHeight: this.defaultWinSize.height,
-                activePage: "SYNOCOMMUNITY.RRManager.Overview.Main",
+                activePage: 'SYNOCOMMUNITY.RRManager.Overview.Main',
                 listItems: tabs,
             };
             return Ext.apply(i, e), i;
@@ -41,37 +41,37 @@ export default
             let items = [
                 {
                     text: this.helper.V('ui', 'tab_general'),
-                    iconCls: "icon-rr-overview",
-                    fn: "SYNOCOMMUNITY.RRManager.Overview.Main",
+                    iconCls: 'icon-rr-overview',
+                    fn: 'SYNOCOMMUNITY.RRManager.Overview.Main',
                 },
                 {
                     text: this.helper.V('ui', 'tab_addons'),
-                    iconCls: "icon-rr-addons",
-                    fn: "SYNOCOMMUNITY.RRManager.Addons.Main",
+                    iconCls: 'icon-rr-addons',
+                    fn: 'SYNOCOMMUNITY.RRManager.Addons.Main',
                 },
                 {
                     text: this.helper.V('ui', 'tab_debug'),
-                    iconCls: "icon-debug",
-                    fn: "SYNOCOMMUNITY.RRManager.Debug.Main",
+                    iconCls: 'icon-debug',
+                    fn: 'SYNOCOMMUNITY.RRManager.Debug.Main',
                 },
                 {
                     text: this.helper.V('ui', 'tab_configuration'),
-                    iconCls: "icon-rr-setting",
-                    fn: "SYNOCOMMUNITY.RRManager.Setting.Main",
+                    iconCls: 'icon-rr-setting',
+                    fn: 'SYNOCOMMUNITY.RRManager.Setting.Main',
                 }
             ];
             if (showConsoleTab) {
                 items.push({
                     text: 'Console',
-                    iconCls: "icon-terminal-and-SNMP",
-                    fn: "SYNOCOMMUNITY.RRManager.Ssh.Main",
+                    iconCls: 'icon-terminal-and-SNMP',
+                    fn: 'SYNOCOMMUNITY.RRManager.Ssh.Main',
                 });
             }
             return items;
         },
         onOpen: function (a) {
             const t = this;
-            t.mon(t.getPageList().getSelectionModel(), "selectionchange", t.onSelectionModelChange, t);
+            t.mon(t.getPageList().getSelectionModel(), 'selectionchange', t.onSelectionModelChange, t);
             SYNOCOMMUNITY.RRManager.AppWindow.superclass.onOpen.call(this, a);
         },
         onDestroy: function (e) {
@@ -80,6 +80,6 @@ export default
         onSelectionModelChange: function () {
             const e = this
                 , t = e.getActivePage();
-            t && ("SYNOCOMMUNITY.RRManager.Overview.Main" === t.itemId ? e.getPageCt().addClass("iscsi-overview-panel") : e.getPageCt().removeClass("iscsi-overview-panel"));
+            t && ('SYNOCOMMUNITY.RRManager.Overview.Main' === t.itemId ? e.getPageCt().addClass('iscsi-overview-panel') : e.getPageCt().removeClass('iscsi-overview-panel'));
         },
     });
