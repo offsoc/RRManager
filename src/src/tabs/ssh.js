@@ -106,25 +106,7 @@ export default Ext.define('SYNOCOMMUNITY.RRManager.Ssh.Main', {
       flowControl,
     };
   },
-  onAfterRender: function () {
-    const me = this;
-    // Ext.defer(function () {
-    //     const container = me.getComponent("terminalContainer");
-    //     if (container) {
-    //         const containerEl = container.getEl().dom;
-    //         me.options = me.getOptions();
-    //         me.xterm = new Xterm(me.options);
-    //         me.xterm.refreshToken();
-    //         me.xterm.open(containerEl);
-    //         me.xterm.connect();
-    //         // // Adjust terminal size to fit the container
-    //         me.resizeTerminal();
-
-    //     } else {
-    //         console.error('Terminal container not found');
-    //     }
-    // }, 50);
-  },
+  onAfterRender: function () {},
   onResize: function () {
     this.resizeTerminal();
   },
@@ -147,16 +129,7 @@ export default Ext.define('SYNOCOMMUNITY.RRManager.Ssh.Main', {
       }
     }
   },
-  onActivate: function () {
-    const self = this;
-    if (this.loaded) {
-      return;
-    }
-
-    (async () => {
-      // Your async code here
-    })();
-  },
+  onActivate: function () {},
 
   updateAllForm: async function () {
     this.owner.setStatusBusy();
