@@ -1,54 +1,106 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import os
 import json
 import sys
-
+import glob
+import shutil
+import tarfile
+import kmodule
+import subprocess
 from pathlib import Path
+
 path_root = Path(__file__).parents[1]
-sys.path.append(str(path_root)+'/libs')
-
+sys.path.append(str(path_root) + "/libs")
 import libs.yaml as yaml
-print("Content-type: application/json\n")
 
-# # Function to read rr_version from a file
-def read_rr_modules_version(parent_directory):
+
+def call_mount_loader_script(action):
+    subprocess.run(
+        ["/usr/bin/rr-loaderdisk.sh", action],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=True,
+    )
+
+
+# Function to read user configuration from a YAML file
+def read_user_config():
+    data = "{}"
+    # call_mount_loader_script("mountLoaderDisk")
     try:
-        with open(parent_directory+'/VERSION', 'r') as file:
-            return file.read().strip()  # Read and strip newline characters
+        with open("/mnt/p1/user-config.yml", "r") as file:
+            data = yaml.safe_load(file)
     except IOError as e:
-        return f"Error reading RR_MODULES_VERSION: {e}"
-    
-def read_modules(parent_directory):
-    modules = []
+        data = f"Error reading user-config.yml: {e}"
+    except Exception as e:
+        data = "{}"
+    # call_mount_loader_script("unmountLoaderDisk")
+    return data
 
-    for subdir in next(os.walk(parent_directory))[1]: # Iterates through each subdirectory
-        manifest_path = os.path.join(parent_directory, subdir, 'manifest.yml')
-        if os.path.exists(manifest_path): # Check if manifest.yml exists in the subdir
-            with open(manifest_path, 'r') as file:
-                try:
-                    modules.append(yaml.safe_load(file)) # Load the YAML file
-                except yaml.YAMLError as exc:
-                    print(f"Error reading {manifest_path}: {exc}")
+# Function to read manifests in subdirectories
+def read_modules(modules_path, user_config, category):
+    installed = user_config.get("addons", [])
+    addons = []
 
-    return modules
+    MS = glob.glob(os.path.join(modules_path, "*.tgz"))
+    MS.sort()
+    modules = {}
+    TMP_PATH = "/tmp/modules"
+    if os.path.exists(TMP_PATH):
+        shutil.rmtree(TMP_PATH)
+    for M in MS:
+        M_name = os.path.splitext(os.path.basename(M))[0]
+        M_modules = {}
+        os.makedirs(TMP_PATH)
+        with tarfile.open(M, "r") as tar:
+            tar.extractall(TMP_PATH)
+        KS = glob.glob(os.path.join(TMP_PATH, "*.ko"))
+        KS.sort()
+        for K in KS:
+            K_name = os.path.splitext(os.path.basename(K))[0]
+            K_info = kmodule.modinfo(K, basedir=os.path.dirname(K), kernel=None)[0]
+            K_description = K_info.get("description", "")
+            K_depends = K_info.get("depends", "")
+            M_modules[K_name] = {"description": K_description, "depends": K_depends}
+        modules[M_name] = M_modules
+        if os.path.exists(TMP_PATH):
+            shutil.rmtree(TMP_PATH)
 
 
-# Authenticate the user
-f = os.popen('/usr/syno/synoman/webman/modules/authenticate.cgi', 'r')
-user = f.read().strip()
+if __name__ == "__main__":
+    user = os.popen("/usr/syno/synoman/webman/modules/authenticate.cgi", "r").read().strip()
 
-ADDONS_PATH = '/mnt/p3/modules/'
-response = {}
+    # Debug
+    if not user:
+        import getpass
 
-if len(user) > 0:
-    addons = read_modules(ADDONS_PATH)
-    response['version']= read_rr_modules_version(ADDONS_PATH)
-    response['result'] = addons
-    response['success'] = True
-    response['total'] = len(addons)
-else:
-    response["status"] = "not authenticated"
+        user = getpass.getuser()
+        if user != "root":
+            user = ""
 
-# Print the JSON response
-print(json.dumps(response))
+    response = {}
+
+    if user:
+        try:
+            call_mount_loader_script("mountLoaderDisk")
+
+            # Read user configuration
+            user_config = read_user_config()
+            if isinstance(user_config, dict):
+                # Read manifests
+                modules = read_modules(os.path.join("/", "mnt", "p3", "modules"), user_config)
+
+                # Construct the response
+                response = {"success": True, "result": modules, "userConfig": user_config, "total": len(modules)}
+            else:
+                response = {"success": False, "error": "Error reading user-config.yml"}
+
+            call_mount_loader_script("unmountLoaderDisk")
+        except Exception as e:
+            response = {"success": False, "error": f"An exception occurred: {str(e)}"}
+    else:
+        response = {"status": "not authenticated"}
+
+    print("Content-type: application/json\n")
+    print(json.dumps(response, indent=4))

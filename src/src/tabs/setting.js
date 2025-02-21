@@ -92,7 +92,6 @@ export default
                 (async () => {
                     await this.setConf();
                     await this.updateAllForm();
-                    // await this.appWin.runScheduledTask('ApplyRRConfig');
                     this.clearStatusBusy();
                     this.setStatusOK();
                 })();

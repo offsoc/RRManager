@@ -22,7 +22,7 @@ export default
             var fileInfo = shareRealPath.replace(shareName, fileInfo.path.slice(1));
             this.apiProvider.callCustomScript(`uploadUpdateFileInfo.cgi?file=${encodeURIComponent(fileInfo)}`).then(() => {
                 this.onRunRrUpdateManuallyClick(fileInfo);
-                this.apiProvider.runScheduledTask("RunRrUpdate");
+                this.apiProvider.callCustomScript("RunRrUpdate.cgi");
             });
         },
         MAX_POST_FILESIZE: Ext.isWebKit ? -1 : window.console && window.console.firebug ? 20971521 : 4294963200,
@@ -40,13 +40,13 @@ export default
                     }
                     const configName = 'rrUpdateFileVersion';
                     self[configName] = responseText;
-                    const currentRrVersion = rrConfig.rr_version;
+                    const currentRrVersion = rrConfig.rr_version.LOADERVERSION;
                     const updateRrVersion = self[configName].updateVersion;
 
                     async function runUpdate() {
                         //show the spinner
                         self.helper.mask(self.appWin);
-                        self.apiProvider.runScheduledTask('RunRrUpdate');
+                        self.apiProvider.callCustomScript("RunRrUpdate.cgi");
                         const maxCountOfRefreshUpdateStatus = 350;
                         let countUpdatesStatusAttemp = 0;
 

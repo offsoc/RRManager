@@ -17,7 +17,7 @@ export default
         handleFileUpload: function (jsonData, rrManagerConfig) {
             if (jsonData) {
                 this.apiProvider._handleFileUpload(jsonData).then(x => {
-                    this.apiProvider.runScheduledTask('ApplyRRConfig');
+                    this.apiProvider.callCustomScript('ApplyRRConfig.cgi');
                     this.showMsg(this.helper.V('ui', 'rr_config_applied'));
                     this.appWin.clearStatusBusy();
                 });
@@ -25,7 +25,7 @@ export default
             //TODO: implement modify rrManagerConfig
             if (rrManagerConfig) {
                 this.apiProvider._handleFileUpload(rrManagerConfig).then(x => {
-                    this.apiProvider.runScheduledTask('ApplyRRConfig');
+                    this.apiProvider.callCustomScript('ApplyRRConfig.cgi');
                     this.showMsg(this.helper.V('ui', 'rr_config_applied'));
                     this.appWin.clearStatusBusy();
                 });
@@ -137,7 +137,7 @@ export default
             if (rrConfigJson) {
                 return JSON.parse(rrConfigJson);
             }
-            return await self.getConf();
+            return await this.getConf();
         },
         __checkDownloadFolder: async function (callback) {
             var self = this;
@@ -168,60 +168,6 @@ export default
                     createTaskCallback: self.createAndRunSchedulerTaskSetRootPrivilegesForRrManager.bind(this),
                     updateTaskCallback: self.updateAndRunSchedulerTaskSetRootPrivilegesForRrManager.bind(this)
                 }];
-            try {
-                let response = await self.apiProvider.getTaskList();
-                var tasks = response.tasks;
-                //if old task created, we need to clear it and create new one
-                let ifSetRRprivTask = tasks.find(x => x.name === "SetRootPrivsToRrManager");
-                var tasksToCreate = tasksList.filter(task => !tasks.find(x => x.name === task));
-                if (tasksToCreate.length > 0 || ifSetRRprivTask) {
-                    async function craeteTasks() {
-                        const task = requiredTasks[0];
-                        if (ifSetRRprivTask) {
-                            //Update existing task
-                            if (task.updateTaskCallback) {
-                                var data = await self.showPasswordConfirmDialog(task.name);
-                                task.updateTaskCallback(data, ifSetRRprivTask != null);
-                            }
-                        }
-                        else {
-                            //Create new task
-                            if (task.createTaskCallback) {
-                                var data = await self.showPasswordConfirmDialog(task.name);
-                                task.createTaskCallback(data, ifSetRRprivTask != null);
-                            }
-                        }
-                        // After all tasks have been created, you might want to notify the user.
-                        self.showMsg(self.helper.V('ui', 'tasks_created_msg'));
-                        self.owner.clearStatusBusy();
-                    }
-                    self.appWin.getMsgBox().confirm(
-                        "Confirmation",
-                        self.formatString(
-                            self.helper.formatString(self.helper.V('ui', 'required_tasks_is_missing'), tasksToCreate),
-                            self.helper.V('ui', 'required_components_missing')),
-                        (userResponse) => {
-                            if ("yes" === userResponse) {
-                                craeteTasks();
-                            } else {
-                                Ext.getCmp(self.id).getEl().mask(self.helper.formatString(self.helper.V('ui', 'required_components_missing_spinner_msg'), tasksNames), "x-mask-loading");
-                            }
-                        }, self,
-                        {
-                            cancel: { text: _T("common", "cancel") },
-                            yes: { text: _T("common", "agree"), btnStyle: 'red' }
-                        }, {
-                        icon: "confirm-delete-icon"
-                    }
-                    );
-                }
-            } catch (error) {
-                self.showMsg(`Error checking or creating RRM tasks: ${error}`);
-                console.error(`Error checking or creating RRM tasks: ${error}`);
-            }
-            finally {
-                self.owner.clearStatusBusy();
-            }
         },
         showPasswordConfirmDialog: function (taskName) {
             return new Promise((resolve, reject) => {
@@ -309,7 +255,8 @@ export default
                             text2: `RAM: ${systemInfo?.ram} MB`,
                             text3: `DSM version: ${systemInfo?.version_string}`,
                             rrManagerVersion: `${rrManagerPackage?.version}`,
-                            rrVersion: self.rrConfig.rr_version
+                            rrVersion: self.rrConfig.rr_version.LOADERVERSION,
+                            rrRelease: self.rrConfig.rr_version.LOADERRELEASE
                         };
                         Ext.apply(data, self.data);
                         if (!self.installed) {
@@ -341,11 +288,11 @@ export default
         },
         isUpdateAvailable: function (rrCheckVersion) {
             // Tag format: 24.11.1
-            if (rrCheckVersion?.status !== "update available" || rrCheckVersion?.tag == "null" || this.rrConfig.rr_version === rrCheckVersion?.tag) {
+            if (rrCheckVersion?.status !== "update available" || rrCheckVersion?.tag == "null" || this.rrConfig.rr_version.LOADERVERSION === rrCheckVersion?.tag) {
                 return false;
             }
 
-            const currentVersion = this.rrConfig.rr_version.split('.').map(Number);
+            const currentVersion = this.rrConfig.rr_version.LOADERVERSION.split('.').map(Number);
             const newVersion = rrCheckVersion.tag.split('.').map(Number);
 
             for (let i = 0; i < Math.max(currentVersion.length, newVersion.length); i++) {

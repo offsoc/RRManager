@@ -69,30 +69,10 @@ rr-manager_extra_install:
 	install -m 755 -d $(STAGING_DIR)/app/images/
 	install -m 755 -d $(STAGING_DIR)/app/images/1x
 		
-	install -m 755 src/scripts/checkUpdateStatus.cgi $(STAGING_DIR)/app/scripts/checkUpdateStatus.cgi
-	install -m 755 src/scripts/getAddons.cgi $(STAGING_DIR)/app/scripts/getAddons.cgi
-	install -m 755 src/scripts/getAvailableUpdates.cgi $(STAGING_DIR)/app/scripts/getAvailableUpdates.cgi	
-	install -m 755 src/scripts/getConfig.cgi $(STAGING_DIR)/app/scripts/getConfig.cgi
-	install -m 755 src/scripts/getModules.cgi $(STAGING_DIR)/app/scripts/getModules.cgi
-	install -m 755 src/scripts/getNetworkInfo.cgi $(STAGING_DIR)/app/scripts/getNetworkInfo.cgi
-	install -m 755 src/scripts/getRrReleaseInfo.cgi $(STAGING_DIR)/app/scripts/getRrReleaseInfo.cgi
-	install -m 755 src/scripts/readUpdateFile.cgi $(STAGING_DIR)/app/scripts/readUpdateFile.cgi
-	install -m 755 src/scripts/uploadConfigFile.cgi $(STAGING_DIR)/app/scripts/uploadConfigFile.cgi
-	install -m 755 src/scripts/uploadUpdateFileInfo.cgi $(STAGING_DIR)/app/scripts/uploadUpdateFileInfo.cgi
-
-	install -m 644 src/app/alias.syno-app-portal.RRM.conf $(STAGING_DIR)/app/alias.syno-app-portal.RRM.conf
-	install -m 644 src/app/config $(STAGING_DIR)/app/config
-	install -m 755 src/app/config.txt $(STAGING_DIR)/app/config.txt	
-	install -m 644 src/app/helptoc.conf $(STAGING_DIR)/app/helptoc.conf
-	install -m 644 src/app/index.conf $(STAGING_DIR)/app/index.conf
-	install -m 755 src/app/install.sh $(STAGING_DIR)/app/install.sh
-	install -m 644 src/app/rr-manager.js $(STAGING_DIR)/app/rr-manager.js
-	install -m 644 src/app/rr-manager.widget.js $(STAGING_DIR)/app/rr-manager.widget.js
-	install -m 755 src/app/style.css $(STAGING_DIR)/app/style.css
-
-	install -m 755 src/images/1x/cate_icn_addons.png $(STAGING_DIR)/app/images/1x/cate_icn_addons.png
-	install -m 755 src/images/1x/cate_icn_overview.png $(STAGING_DIR)/app/images/1x/cate_icn_overview.png
-	install -m 755 src/images/1x/cate_icn_setting.png $(STAGING_DIR)/app/images/1x/cate_icn_setting.png	
+	install -m 755 src/scripts/* $(STAGING_DIR)/app/scripts/
+	install -m 644 src/app/config $(STAGING_DIR)/app/
+	install -m 644 src/app/*.* $(STAGING_DIR)/app/
+	install -m 755 src/images/1x/* $(STAGING_DIR)/app/images/1x/
 	
 	install -m 755 src/app/tasks.sql $(STAGING_DIR)/app/tasks.sql
 

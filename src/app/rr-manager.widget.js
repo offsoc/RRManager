@@ -35,29 +35,8 @@ Ext.define("SYNOCOMMUNITY.RRManager.Widget", {
             await this.startPolling();
         }
     },
-    runScheduledTask: function (taskName) {
-        that = this;
-        return new Promise((resolve, reject) => {
-            let params = {
-                task_name: taskName
-            };
-            let args = {
-                api: 'SYNO.Core.EventScheduler',
-                method: 'run',
-                version: 1,
-                params: params,
-                stop_when_error: false,
-                mode: 'sequential',
-                callback: function (success, message) {
-                    success ? resolve(message) : reject('Unable to get packages!');
-                }
-            };
-            that.sendWebAPI(args);
-        });
-    },
     startPolling: async function () {
         const self = this;
-        self.runScheduledTask('MountLoaderDisk');
         const rrRR = await this.checkRRVersion();
         const rrConf = await this.getRRConf();
         let rr_health_status = rrConf.rr_health == 'healthy' ? this.TYPE_NORMAL : this.TYPE_ATTENTION;
@@ -69,7 +48,7 @@ Ext.define("SYNOCOMMUNITY.RRManager.Widget", {
         self.packages = await self.getPackagesList();
         const rrManagerPackage = self?.packages?.packages?.find(package => package.id == 'rr-manager');
         self.versionInfo = {
-            rr_version: rrConf?.rr_version,
+            rr_loader_version: rrConf?.rr_version.LOADERVERSION,
             rr_manager_version: rrManagerPackage?.version,
             rr_update_version: rrRR.tag
         };
@@ -327,7 +306,7 @@ Ext.define("SYNOCOMMUNITY.RRManager.Widget", {
                 name: "rrVerison",
                 id: "rrVerison",
                 xtype: "box",
-                html: String.format('<p ext:qtip="{1}" class="syno-sysinfo-system-health-south-data">{0}</p>', versionInfo.rr_version, Ext.util.Format.htmlEncode(versionInfo.rr_version))
+                html: String.format('<p ext:qtip="{1}" class="syno-sysinfo-system-health-south-data">{0}</p>', versionInfo.rr_loader_version, Ext.util.Format.htmlEncode(versionInfo.rr_loader_version))
             },
             {
                 xtype: "box",
@@ -339,7 +318,7 @@ Ext.define("SYNOCOMMUNITY.RRManager.Widget", {
                 html: String.format('<p ext:qtip="{1}" class="syno-sysinfo-system-health-south-data">{0}</p>', versionInfo.rr_manager_version, Ext.util.Format.htmlEncode(versionInfo.rr_manager_version))
             }
         ];
-        if (versionInfo.rr_version !== versionInfo.rr_update_version) {
+        if (versionInfo.rr_loader_version !== versionInfo.rr_update_version) {
             labels.push({
                 xtype: "box",
                 html: String.format('<p ext:qtip="{1}" class="syno-sysinfo-system-health-south-title">{0}</p>', "RR update available!", Ext.util.Format.htmlEncode("RR update available!"))

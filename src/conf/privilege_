@@ -26,15 +26,5 @@
             "action": "postinst",
             "run-as": "package"
         }
-    ],
-    "executable": [
-        {
-            "relpath": "app/scripts/getConfig.cgi",
-            "run-as": "package"
-        },
-        {
-            "relpath": "app/scripts/getAddons.cgi",
-            "run-as": "package"
-        }
     ]
 }

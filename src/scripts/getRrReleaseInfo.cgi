@@ -1,67 +1,88 @@
-#!/usr/bin/env bash
-# Assuming jq is installed on your system for parsing and generating JSON
-# Content-Type header for JSON output
-echo "Content-type: application/json"
-echo ""
+#!/usr/bin/env python
 
-USER=$(/usr/syno/synoman/webman/modules/authenticate.cgi)
+import os
+import json
+import requests
 
-if [ "${USER}" = "" ]; then
-  echo '{"error": "Security: user not authenticated"}'
-else
-  # Read proxy configuration from /etc/proxy.conf
-  proxy_config=$(cat /etc/proxy.conf)
-  proxy_enable=$(echo "${proxy_config}" | grep 'proxy_enabled' | cut -d'=' -f2)
-  proxy_host=$(echo "${proxy_config}" | grep 'http_host' | cut -d'=' -f2)
-  proxy_port=$(echo "${proxy_config}" | grep 'http_port' | cut -d'=' -f2)
-  proxy_username=$(echo "${proxy_config}" | grep 'proxy_user' | cut -d'=' -f2)
-  proxy_password=$(echo "${proxy_config}" | grep 'proxy_pwd' | cut -d'=' -f2)
+# Function to read the local version from /usr/rr/VERSION
+def get_local_version():
+    try:
+        with open("/usr/rr/VERSION", "r") as f:
+            for line in f:
+                if "LOADERVERSION" in line:
+                    return line.split("=")[1].strip()
+    except FileNotFoundError:
+        return None
 
-  # Define the URL for GitHub API
-  URL="https://api.github.com/repos/RROrg/rr/releases/latest"
+# Authenticate user
+user = os.popen("/usr/syno/synoman/webman/modules/authenticate.cgi").read().strip()
+if not user:
+    print("Content-type: application/json\n")
+    print(json.dumps({"error": "Security: user not authenticated"}))
+    exit()
 
-  # Construct proxy string if proxy is enabled
-  if [ "${proxy_enable}" = "yes" ]; then
-    if [ -n "${proxy_username}" ] && [ -n "${proxy_password}" ]; then
-      proxy="http://${proxy_username}:${proxy_password}@${proxy_host}:${proxy_port}"
-    else
-      proxy="http://${proxy_host}:${proxy_port}"
-    fi
-    response=$(curl -s "${URL}" --proxy "${proxy}")
-    proxy_used=true
-  else
-    response=$(curl -s "${URL}")
-    proxy_used=false
-  fi
+# Read proxy configuration
+proxy_config = {}
+try:
+    with open("/etc/proxy.conf", "r") as f:
+        for line in f:
+            key, value = line.strip().split("=", 1)
+            proxy_config[key] = value
+except FileNotFoundError:
+    pass
 
-  # Extract the tag name from the response
-  TAG=$(echo "${response}" | jq -r '.tag_name')
-  RELEASE_LINK=$(echo "${response}" | jq -r '.html_url')
-  # Read local version
-  LOCALTAG=$(cat /usr/rr/VERSION 2>/dev/null | grep LOADERVERSION | cut -d'=' -f2)
-  # Construct the download link
-  DOWNLOAD_LINK="https://github.com/RROrg/rr/releases/download/${TAG}/updateall-${TAG}.zip"
+proxy_enabled = proxy_config.get("proxy_enabled", "no") == "yes"
+proxy_host = proxy_config.get("http_host", "")
+proxy_port = proxy_config.get("http_port", "")
+proxy_user = proxy_config.get("proxy_user", "")
+proxy_password = proxy_config.get("proxy_pwd", "")
 
-  # Check if LOCALTAG is empty
-  if [ -z "${LOCALTAG}" ]; then
-    # Generate error message using jq
-    echo "{}" | jq --arg message "Unknown bootloader version!" '.error = $message'
-    exit 0
-  fi
+proxy = None
+if proxy_enabled and proxy_host and proxy_port:
+    if proxy_user and proxy_password:
+        proxy = {"http": f"http://{proxy_user}:{proxy_password}@{proxy_host}:{proxy_port}"}
+    else:
+        proxy = {"http": f"http://{proxy_host}:{proxy_port}"}
 
-  # Generate output JSON
-  if [ "${TAG}" = "${LOCALTAG}" ]; then
-    # Use jq to generate JSON for up-to-date status
-    echo "{}" | jq --arg tag "$TAG" --arg url "$RELEASE_LINK" --arg updateAllUrl "$DOWNLOAD_LINK" --arg message "Actual version is ${TAG}" --argjson proxyUsed "$proxy_used" \
-      '.status = "up-to-date" | .tag = $tag | .message = $message | .url = $url | .updateAllUrl = $updateAllUrl | .proxyUsed = $proxyUsed'
-  else
-    # Use jq to generate JSON for update available, including release notes
-    # Fetch and escape release notes from GitHub API response
-    releaseNotes=$(echo "${response}" | jq '.body')
-    
-    # Use jq to build the JSON response
-    echo "{}" | jq --arg tag "$TAG" --argjson notes "$releaseNotes" --arg url "$RELEASE_LINK" --arg updateAllUrl "$DOWNLOAD_LINK" --argjson proxyUsed "$proxy_used" \
-      '.status = "update available" | .tag = $tag | .notes = $notes | .url = $url | .updateAllUrl = $updateAllUrl | .proxyUsed = $proxyUsed'
-  fi
+# GitHub API URL
+url = "https://api.github.com/repos/RROrg/rr/releases/latest"
 
-fi
+# Fetch release info from GitHub
+try:
+    response = requests.get(url, proxies=proxy if proxy else None, timeout=10)
+    response.raise_for_status()
+    data = response.json()
+    tag = data.get("tag_name", "Unknown")
+    release_link = data.get("html_url", "")
+    release_notes = data.get("body", "")
+    download_link = f"https://github.com/RROrg/rr/releases/download/{tag}/updateall-{tag}.zip"
+except requests.RequestException as e:
+    print("Content-type: application/json\n")
+    print(json.dumps({"error": f"Failed to fetch release info: {e}"}))
+    exit()
+
+# Get local version
+local_tag = get_local_version()
+if not local_tag:
+    print("Content-type: application/json\n")
+    print(json.dumps({"error": "Unknown bootloader version!"}))
+    exit()
+
+# Construct response JSON
+result = {
+    "tag": tag,
+    "url": release_link,
+    "updateAllUrl": download_link,
+    "proxyUsed": proxy_enabled,
+}
+
+if tag == local_tag:
+    result["status"] = "up-to-date"
+    result["message"] = f"Actual version is {tag}"
+else:
+    result["status"] = "update available"
+    result["notes"] = release_notes
+
+# Output JSON response
+print("Content-type: application/json\n")
+print(json.dumps(result, indent=4))
