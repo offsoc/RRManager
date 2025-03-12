@@ -14,8 +14,9 @@ echo "DELETE FROM task WHERE task_name='ApplyRRConfig'" | sqlite3 /usr/syno/etc/
 # add new tasks
 echo "DELETE FROM task WHERE task_name='SetRootPrivsToRrManager'" | sqlite3 /usr/syno/etc/esynoscheduler/esynoscheduler.db
 #Add sudoers for loader disk
-echo -e "sc-rr-manager ALL=(ALL) NOPASSWD: /usr/bin/rr-loaderdisk.sh mountLoaderDisk\nsc-rr-manager ALL=(ALL) NOPASSWD: /usr/bin/rr-loaderdisk.sh unmountLoaderDisk" | tee /etc/sudoers.d/99-rr-loaderdisk /etc.defaults/sudoers.d/99-rr-loaderdisk > /dev/null
-chmod 0440 /etc/sudoers.d/99-rr-loaderdisk /etc.defaults/sudoers.d/99-rr-loaderdisk
+rm -f /etc/sudoers.d/99-rr-loaderdisk /etc.defaults/sudoers.d/99-rr-loaderdisk
+#echo -e "sc-rr-manager ALL=(ALL) NOPASSWD: /usr/bin/rr-loaderdisk.sh mountLoaderDisk\nsc-rr-manager ALL=(ALL) NOPASSWD: /usr/bin/rr-loaderdisk.sh unmountLoaderDisk" | tee /etc/sudoers.d/99-rr-loaderdisk /etc.defaults/sudoers.d/99-rr-loaderdisk > /dev/null
+#chmod 0440 /etc/sudoers.d/99-rr-loaderdisk /etc.defaults/sudoers.d/99-rr-loaderdisk
 #Add ttyd alias
 cp /var/packages/rr-manager/target/app/alias.syno-app-portal.RRM.conf /etc/nginx/conf.d/alias.syno-app-portal.RRM.conf
 systemctl restart nginx

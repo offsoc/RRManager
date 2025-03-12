@@ -13,33 +13,20 @@ export default Ext.define('SYNOCOMMUNITY.RRManager.Overview.Main', {
   },
 
   handleFileUpload: function (jsonData, rrManagerConfig) {
-    if (jsonData) {
-      this.apiProvider
-        ._handleFileUpload(jsonData)
-        .then(x => {
-          this.apiProvider.callCustomScript('ApplyRRConfig.cgi');
+    const handleUpload = (data) => {
+      this.apiProvider._handleFileUpload(data)
+        .then(() => {
           this.showMsg(this.helper.V('ui', 'rr_config_applied'));
           this.appWin.clearStatusBusy();
         })
-        .catch(err => {
+        .catch(() => {
           this.showMsg(this.helper.V('ui', 'rr_config_apply_error'));
           this.appWin.clearStatusBusy();
         });
-    }
-    //TODO: implement modify rrManagerConfig
-    if (rrManagerConfig) {
-      this.apiProvider
-        ._handleFileUpload(rrManagerConfig)
-        .then(x => {
-          this.apiProvider.callCustomScript('ApplyRRConfig.cgi');
-          this.showMsg(this.helper.V('ui', 'rr_config_applied'));
-          this.appWin.clearStatusBusy();
-        })
-        .catch(err => {
-          this.showMsg(this.helper.V('ui', 'rr_config_apply_error'));
-          this.appWin.clearStatusBusy();
-        });
-    }
+    };
+
+    if (jsonData) handleUpload(jsonData);
+    if (rrManagerConfig) handleUpload(rrManagerConfig);
   },
   constructor: function (e) {
     this.installed = false;

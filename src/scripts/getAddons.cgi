@@ -29,10 +29,8 @@ def read_user_config():
     try:
         with open("/mnt/p1/user-config.yml", "r") as file:
             data = yaml.safe_load(file)
-    except IOError as e:
-        data = f"Error reading user-config.yml: {e}"
     except Exception as e:
-        data = "{}"
+        data = f"Exception: {e}"
     # call_mount_loader_script("unmountLoaderDisk")
     return data
 

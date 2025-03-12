@@ -31,12 +31,11 @@ def read_user_config():
     try:
         with open("/mnt/p1/user-config.yml", "r") as file:
             data = yaml.safe_load(file)
-    except IOError as e:
-        data = f"Error reading user-config.yml: {e}"
     except Exception as e:
-        data = "{}"
+        data = f"Exception: {e}"
     # call_mount_loader_script("unmountLoaderDisk")
     return data
+
 
 # Function to read manifests in subdirectories
 def read_modules(modules_path, user_config, category):
@@ -69,7 +68,11 @@ def read_modules(modules_path, user_config, category):
 
 
 if __name__ == "__main__":
-    user = os.popen("/usr/syno/synoman/webman/modules/authenticate.cgi", "r").read().strip()
+    user = (
+        os.popen("/usr/syno/synoman/webman/modules/authenticate.cgi", "r")
+        .read()
+        .strip()
+    )
 
     # Debug
     if not user:
@@ -89,10 +92,17 @@ if __name__ == "__main__":
             user_config = read_user_config()
             if isinstance(user_config, dict):
                 # Read manifests
-                modules = read_modules(os.path.join("/", "mnt", "p3", "modules"), user_config)
+                modules = read_modules(
+                    os.path.join("/", "mnt", "p3", "modules"), user_config
+                )
 
                 # Construct the response
-                response = {"success": True, "result": modules, "userConfig": user_config, "total": len(modules)}
+                response = {
+                    "success": True,
+                    "result": modules,
+                    "userConfig": user_config,
+                    "total": len(modules),
+                }
             else:
                 response = {"success": False, "error": "Error reading user-config.yml"}
 

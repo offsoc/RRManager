@@ -1,10 +1,8 @@
-
 load_variables_from_file "${INST_VARIABLES}"
 
 initialize_variables
 
-wizard_download_share_input()
-{
+wizard_download_share_input() {
   local wizard_download_share_input_value=$1
   local wizard_download_dir_input_value=$2
   cat <<END_OF_INPUT
@@ -45,7 +43,7 @@ END_OF_STEP
   echo "["
   if [ "$(echo "${SYNOPKG_OLD_PKGVER}" | sed -r "s/^.*-([0-9]+)$/\1/")" -lt 13 ]; then
     # Means that we'll need to have a wizard step about the download directory
-    data_share_migration_step;
+    data_share_migration_step
   fi
-  echo "]";
-}> "${SYNOPKG_TEMP_LOGFILE}"
+  echo "]"
+} >"${SYNOPKG_TEMP_LOGFILE}"

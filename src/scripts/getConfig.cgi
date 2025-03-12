@@ -27,10 +27,8 @@ def read_user_config():
     try:
         with open("/mnt/p1/user-config.yml", "r") as file:
             data = yaml.safe_load(file)
-    except IOError as e:
-        data = f"Error reading user-config.yml: {e}"
     except Exception as e:
-        data = "{}"
+        data = f"Exception: {e}"
     # call_mount_loader_script("unmountLoaderDisk")
     return data
 
@@ -78,7 +76,11 @@ def read_rr_awaiting_update(file_name):
 
 
 if __name__ == "__main__":
-    user = os.popen("/usr/syno/synoman/webman/modules/authenticate.cgi", "r").read().strip()
+    user = (
+        os.popen("/usr/syno/synoman/webman/modules/authenticate.cgi", "r")
+        .read()
+        .strip()
+    )
 
     # Debug
     if not user:
