@@ -25,6 +25,22 @@ def call_mount_loader_script(action):
     )
 
 
+def read_config(file_path):
+    try:
+        config = {}
+        with open(file_path, "r") as file:
+            for line in file:
+                line = line.strip()
+                if line and not line.startswith("#"):
+                    key, value = line.split("=")
+                    config[key.strip()] = value.strip()
+        return config
+    except IOError as e:
+        return f"Error reading user-config.yml: {e}"
+    except e:
+        return "{}"
+
+
 def rmove_file(path, default=None):
     try:
         if os.path.exists("/usr/sbin/rrmdo"):
@@ -81,8 +97,11 @@ if __name__ == "__main__":
                 if not file_update:
                     raise Exception("file is empty")
 
+                rr_manager_config = read_config("/var/packages/rr-manager/target/app/config.txt")
+                RR_TMP_DIR = rr_manager_config.get("RR_TMP_DIR")
+                RR_UPDATE_PROGRESS_FILE = rr_manager_config.get("RR_UPDATE_PROGRESS_FILE")
                 # 删除文件
-                file_progress = "/tmp/rr_update_progress"
+                file_progress = os.path.join("/", RR_TMP_DIR, RR_UPDATE_PROGRESS_FILE)
                 rmove_file(file_progress)
                 # call_mount_loader_script("mountLoaderDisk")
                 updateRR(file_update, file_progress)

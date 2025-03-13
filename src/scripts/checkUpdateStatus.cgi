@@ -43,20 +43,25 @@ if __name__ == "__main__":
         rr_manager_config = read_rrmanager_config(
             "/var/packages/rr-manager/target/app/config.txt"
         )
-        filename = rr_manager_config.get("RR_UPDATE_PROGRESS_FILE")
+        RR_TMP_DIR = rr_manager_config.get("RR_TMP_DIR")
+        RR_UPDATE_PROGRESS_FILE = rr_manager_config.get("RR_UPDATE_PROGRESS_FILE")
 
-        if filename:
+        if RR_TMP_DIR and RR_UPDATE_PROGRESS_FILE:
             # Construct file path
-            file_path = os.path.join("/tmp", filename)
+            file_path = os.path.join("/", RR_TMP_DIR, RR_UPDATE_PROGRESS_FILE)
 
             if os.path.abspath(file_path).startswith("/tmp/"):
                 try:
-                    with open(file_path, "r") as file:
-                        content = file.read()
-                        # Attempt to parse the content as JSON
-                        parsed_content = json.loads(content)
-                        # Success, set the result
-                        response["result"] = parsed_content
+                    if os.path.exists(file_path):
+                        with open(file_path, "r") as file:
+                            content = file.read()
+                            # Attempt to parse the content as JSON
+                            parsed_content = json.loads(content)
+                            # Success, set the result
+                            response["result"] = parsed_content
+                            response["success"] = True
+                    else:
+                        response["result"] = '{"progress": "--", "progressmsg": "--"}'
                         response["success"] = True
                 except json.JSONDecodeError:
                     response["status"] = "File content is not valid JSON."

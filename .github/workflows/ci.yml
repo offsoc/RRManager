@@ -46,6 +46,12 @@ jobs:
               -w /spksrc/spk/rr-manager \
               ghcr.io/synocommunity/spksrc \
               make arch-${{ matrix.target }}
+      - name: Upload to Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages-${{ matrix.target }}
+          path: |
+            packages/*.spk
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
