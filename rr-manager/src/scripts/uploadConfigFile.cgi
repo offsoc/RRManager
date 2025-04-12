@@ -5,6 +5,7 @@ import json
 import sys
 import cgi
 import cgitb
+import subprocess
 from pathlib import Path
 
 path_root = Path(__file__).parents[1]
@@ -12,6 +13,26 @@ sys.path.append(str(path_root) + "/libs")
 import libs.yaml as yaml
 
 cgitb.enable()  # Enable CGI error reporting
+
+
+def call_mount_loader_script(action):
+    subprocess.run(
+        ["/usr/bin/rr-loaderdisk.sh", action],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=True,
+    )
+
+
+def mv_file(src, dest):
+    try:
+        if os.path.exists("/usr/sbin/rrmdo"):
+            return os.popen(f'/usr/sbin/rrmdo mv -f "{src}" "{dest}"').read().strip()
+        else:
+            return os.popen(f'mv -f "{src}" "{dest}"').read().strip()
+    except Exception:
+        pass
+
 
 if __name__ == "__main__":
     user = os.popen("/usr/syno/synoman/webman/modules/authenticate.cgi", "r").read().strip()
@@ -37,22 +58,21 @@ if __name__ == "__main__":
                     data = json.loads(request_body)
                     # Convert JSON data to YAML using the custom dumper
                     yaml_data = yaml.dump(data, sort_keys=False)
-                    # existing_config = read_user_config()
-                    # message ='after read existing_config'
-                    # Define the file path
-                    file_path = "/tmp/user-config.yml"
-                    # existing_config['addons'] = data.addons
-                    # message ='after remap existing_config'
-                    response["addons"] = data
-                    # Write the YAML data to a file
-                    with open(file_path, "w") as yaml_file:
-                        yaml_file.write(yaml_data)
+                    # Write the YAML data to config file
+                    config_file = "/tmp/user-config.yml"
+                    with open(config_file, "w") as f:
+                        f.write(yaml_data)
                         message = "after write existing_config"
-
-                    with open("/tmp/.build", "w") as build_file:
-                        build_file.write("")
+                    # Write the build file
+                    _build_file = "/tmp/.build"
+                    with open(_build_file, "w") as f:
+                        f.write("")
                         message = "after write build"
 
+                    call_mount_loader_script("mountLoaderDisk")
+                    mv_file(config_file, "/mnt/p1/user-config.yml")
+                    mv_file(_build_file, "/mnt/p1/.build")
+                    call_mount_loader_script("umountLoaderDisk")
                     response["success"] = True
                     response["message"] = message
                 else:
