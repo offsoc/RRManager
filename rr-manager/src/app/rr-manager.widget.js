@@ -194,9 +194,6 @@ Ext.define('SYNOCOMMUNITY.RRManager.Widget', {
   TYPE_DANGER: 0,
   TYPE_ATTENTION: 1,
   TYPE_NORMAL: 2,
-  getIcon: function (t) {
-    return `<div class = "${self._getIcon(t.type)}"></div>`;
-  },
   _getIcon: function (t) {
     switch (t) {
       case this.TYPE_DANGER:
@@ -207,6 +204,9 @@ Ext.define('SYNOCOMMUNITY.RRManager.Widget', {
       default:
         return 'syno-sysinfo-system-health-west-normal';
     }
+  },
+  getIcon: function (t) {
+    return `<div class = "${self._getIcon(t.type)}"></div>`;
   },
   getRRConf: function () {
     return this.callCustomScript('getConfig.cgi');
