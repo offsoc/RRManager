@@ -69,6 +69,7 @@ jobs:
 
       - name: Build Package
         run: |
+          workdir=$(pwd)
           docker run -v /home/runner/work/spksrc:/spksrc \
           -v $workdir:/spksrc/spk/rr-manager \
           -v $workdir/packages:/spksrc/packages \
