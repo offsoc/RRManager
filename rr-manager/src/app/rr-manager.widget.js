@@ -36,6 +36,7 @@ Ext.define('SYNOCOMMUNITY.RRManager.Widget', {
   },
   startPolling: async function () {
     const self = this;
+    window.test_rr = self;
     const rrRR = await this.checkRRVersion();
     const rrConf = await this.getRRConf();
     let rr_health_status = rrConf.rr_health === 'healthy' ? this.TYPE_NORMAL : this.TYPE_ATTENTION;
