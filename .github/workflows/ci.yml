@@ -69,17 +69,12 @@ jobs:
 
       - name: Build Package
         run: |
-          workdir=$(pwd)
-          docker run -v /home/runner/work/spksrc:/spksrc \
-          -v $workdir:/spksrc/spk/rr-manager \
-          -v $workdir/packages:/spksrc/packages \
-          -w /spksrc/spk/rr-manager \
-          ghcr.io/synocommunity/spksrc \
-          make arch-${{ matrix.target }}
+          ROOT_PATH="${{ github.workspace }}"
+          docker run -v ${ROOT_PATH}/spksrc:/spksrc -v ${ROOT_PATH}/rr-manager:/spksrc/spk/rr-manager -w /spksrc/spk/rr-manager ghcr.io/synocommunity/spksrc make arch-${{ matrix.target }}
 
       - name: Upload to Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: packages-${{ matrix.target }}
           path: |
-            packages/*.spk
+            spksrc/packages/*.spk
