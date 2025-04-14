@@ -66,32 +66,19 @@ jobs:
         uses: crazy-max/ghaction-upx@v3
         with:
           install-only: true
+
       - name: Build Package
         run: |
-          ROOT_PATH="${{ github.workspace }}"
-          docker run -v ${ROOT_PATH}/spksrc:/spksrc -v ${ROOT_PATH}/rr-manager:/spksrc/spk/rr-manager -w /spksrc/spk/rr-manager ghcr.io/synocommunity/spksrc make arch-${{ matrix.target }}
-
-          docker run -v ${ROOT_PATH}/spksrc:/spksrc -w /spksrc/spk/python311 ghcr.io/synocommunity/spksrc make arch-${{ matrix.target }}
+          docker run -v /home/runner/work/spksrc:/spksrc \
+          -v $workdir:/spksrc/spk/rr-manager \
+          -v $workdir/packages:/spksrc/packages \
+          -w /spksrc/spk/rr-manager \
+          ghcr.io/synocommunity/spksrc \
+          make arch-${{ matrix.target }}
 
       - name: Upload to Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: packages-${{ matrix.target }}
           path: |
-            spksrc/packages/*.spk
-
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: packages/*.spk
-
-      - name: Release
-        if: env.VERSION != ''
-        uses: ncipollo/release-action@v1
-        with:
-          tag: ${{ env.VERSION }}
-          prerelease: ${{ inputs.prerelease }}
-          artifacts: |
-            spksrc/packages/*.spk
+            packages/*.spk
