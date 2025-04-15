@@ -206,7 +206,7 @@ Ext.define('SYNOCOMMUNITY.RRManager.Widget', {
     }
   },
   getIcon: function (t) {
-    return `<div class = "${self._getIcon(t.type)}"></div>`;
+    return `<div class = "${this._getIcon(t.type)}"></div>`;
   },
   getRRConf: function () {
     return this.callCustomScript('getConfig.cgi');
