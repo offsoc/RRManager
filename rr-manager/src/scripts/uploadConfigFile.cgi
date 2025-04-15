@@ -84,7 +84,7 @@ if __name__ == "__main__":
                       config_data = json.loads(config_data)
                       config_data["rr-manager.js"]["SYNOCOMMUNITY.RRManager.AppInstance"]["enableTTYDTab"] = data["enableTTYDTab"]
                       config_data["rr-manager.js"]["SYNOCOMMUNITY.RRManager.AppInstance"]["checkRRForUpdates"] = data["checkRRForUpdates"]
-                      rr_manager_file = "tmp/rrconfig"
+                      rr_manager_file = "/tmp/rrconfig"
                       with open(rr_manager_file, "w") as f:
                           f.write(json.dumps(config_data, indent=4))
                           message = "after write rr-manager config"
