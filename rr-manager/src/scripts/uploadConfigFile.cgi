@@ -72,7 +72,7 @@ if __name__ == "__main__":
                     call_mount_loader_script("mountLoaderDisk")
                     mv_file(config_file, "/mnt/p1/user-config.yml")
                     mv_file(_build_file, "/mnt/p1/.build")
-                    call_mount_loader_script("umountLoaderDisk")
+                    call_mount_loader_script("unmountLoaderDisk")
                     response["success"] = True
                     response["message"] = message
                 else:

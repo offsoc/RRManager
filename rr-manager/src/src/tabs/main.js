@@ -25,7 +25,7 @@ export default Ext.define('SYNOCOMMUNITY.RRManager.Overview.Main', {
         });
     };
 
-    // if (jsonData) await handleUpload(jsonData);
+    if (jsonData) await handleUpload(jsonData);
     if (rrManagerConfig) await handleUpload(rrManagerConfig);
   },
   constructor: function (e) {
