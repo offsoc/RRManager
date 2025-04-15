@@ -53,6 +53,7 @@ Ext.define('SYNOCOMMUNITY.RRManager.Widget', {
       rr_loader_version: rrConf?.rr_version.LOADERVERSION,
       rr_manager_version: rrManagerPackage?.version,
       rr_update_version: rrRR.tag,
+      rr_update_url: rrRR.url,
     };
     this.southTable.add(self.renderVersionInfo(self.versionInfo));
     this.southTable.doLayout();
@@ -371,7 +372,7 @@ Ext.define('SYNOCOMMUNITY.RRManager.Widget', {
         html: String.format(
           '<a ext:qtip="{0}" href="{1}" class="syno-sysinfo-system-health-south-data">{0}</a>',
           versionInfo.rr_update_version,
-          Ext.util.Format.htmlEncode('http://')
+          Ext.util.Format.htmlEncode(versionInfo.rr_update_url)
         ),
       });
     }
