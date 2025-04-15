@@ -212,6 +212,7 @@ export default Ext.define('SYNOCOMMUNITY.RRManager.Overview.Main', {
         var isModernDSM = systemInfo.version_string.includes('7.2.2');
         self.apiProvider.setIsModernDSM(isModernDSM);
 
+        await self.__checkDownloadFolder();
         if (systemInfo && packages) {
           self.rrCheckVersion = rrCheckVersion;
           //TODO: implement localization
