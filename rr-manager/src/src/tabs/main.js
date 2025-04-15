@@ -12,7 +12,7 @@ export default Ext.define('SYNOCOMMUNITY.RRManager.Overview.Main', {
     });
   },
 
-  handleFileUpload: function (jsonData, rrManagerConfig) {
+  handleFileUpload: async function (jsonData, rrManagerConfig) {
     const handleUpload = (data) => {
       this.apiProvider._handleFileUpload(data)
         .then(() => {
@@ -25,8 +25,8 @@ export default Ext.define('SYNOCOMMUNITY.RRManager.Overview.Main', {
         });
     };
 
-    if (jsonData) handleUpload(jsonData);
-    if (rrManagerConfig) handleUpload(rrManagerConfig);
+    if (jsonData) await handleUpload(jsonData);
+    if (rrManagerConfig) await handleUpload(rrManagerConfig);
   },
   constructor: function (e) {
     this.installed = false;
