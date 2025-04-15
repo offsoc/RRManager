@@ -80,11 +80,9 @@ jobs:
           path: |
             spksrc/packages/*.spk
 
-      - name: Create GitHub Release
+      - name: Release
+        uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
-        uses: ncipollo/release-action@v1
         with:
-          tag: ${{ github.ref }}
-          # 可根据需要配置 release 名称、内容以及 prerelease 状态
-          release_name: Release ${{ github.ref }}
-          prerelease: ${{ github.event.inputs.prerelease }}
+          files: |
+            spksrc/packages/*.spk
