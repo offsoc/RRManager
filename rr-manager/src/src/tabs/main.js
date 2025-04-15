@@ -14,20 +14,20 @@ export default Ext.define('SYNOCOMMUNITY.RRManager.Overview.Main', {
 
   handleFileUpload: async function (jsonData, rrManagerConfig) {
     const handleUpload = async (data) => {
-      this.apiProvider._handleFileUpload(data)
-        .then(() => {
-          this.showMsg(this.helper.V('ui', 'rr_config_applied'));
-          this.appWin.clearStatusBusy();
-        })
-        .catch(() => {
-          this.showMsg(this.helper.V('ui', 'rr_config_apply_error'));
-          this.appWin.clearStatusBusy();
-        });
+      try {
+        await this.apiProvider._handleFileUpload(data);
+        this.showMsg(this.helper.V('ui', 'rr_config_applied'));
+      } catch (e) {
+        this.showMsg(this.helper.V('ui', 'rr_config_apply_error'));
+      } finally {
+        this.appWin.clearStatusBusy();
+      }
     };
 
     if (jsonData) await handleUpload(jsonData);
     if (rrManagerConfig) await handleUpload(rrManagerConfig);
-  },
+  }
+  ,
   constructor: function (e) {
     this.installed = false;
     this.appWin = e.appWin;
