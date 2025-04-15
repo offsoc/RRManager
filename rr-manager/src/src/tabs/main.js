@@ -13,7 +13,7 @@ export default Ext.define('SYNOCOMMUNITY.RRManager.Overview.Main', {
   },
 
   handleFileUpload: async function (jsonData, rrManagerConfig) {
-    const handleUpload = (data) => {
+    const handleUpload = async (data) => {
       this.apiProvider._handleFileUpload(data)
         .then(() => {
           this.showMsg(this.helper.V('ui', 'rr_config_applied'));
