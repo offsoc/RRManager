@@ -36,6 +36,7 @@ Ext.define('SYNOCOMMUNITY.RRManager.Widget', {
   },
   startPolling: async function () {
     const self = this;
+    window.test_rr = self;
     const rrRR = await this.checkRRVersion();
     const rrConf = await this.getRRConf();
     let rr_health_status = rrConf.rr_health === 'healthy' ? this.TYPE_NORMAL : this.TYPE_ATTENTION;
@@ -52,6 +53,7 @@ Ext.define('SYNOCOMMUNITY.RRManager.Widget', {
       rr_loader_version: rrConf?.rr_version.LOADERVERSION,
       rr_manager_version: rrManagerPackage?.version,
       rr_update_version: rrRR.tag,
+      rr_update_url: rrRR.url,
     };
     this.southTable.add(self.renderVersionInfo(self.versionInfo));
     this.southTable.doLayout();
@@ -193,9 +195,6 @@ Ext.define('SYNOCOMMUNITY.RRManager.Widget', {
   TYPE_DANGER: 0,
   TYPE_ATTENTION: 1,
   TYPE_NORMAL: 2,
-  getIcon: function (t) {
-    return `<div class = "${self._getIcon(t.type)}"></div>`;
-  },
   _getIcon: function (t) {
     switch (t) {
       case this.TYPE_DANGER:
@@ -206,6 +205,9 @@ Ext.define('SYNOCOMMUNITY.RRManager.Widget', {
       default:
         return 'syno-sysinfo-system-health-west-normal';
     }
+  },
+  getIcon: function (t) {
+    return `<div class = "${this._getIcon(t.type)}"></div>`;
   },
   getRRConf: function () {
     return this.callCustomScript('getConfig.cgi');
@@ -370,7 +372,7 @@ Ext.define('SYNOCOMMUNITY.RRManager.Widget', {
         html: String.format(
           '<a ext:qtip="{0}" href="{1}" class="syno-sysinfo-system-health-south-data">{0}</a>',
           versionInfo.rr_update_version,
-          Ext.util.Format.htmlEncode('http://')
+          Ext.util.Format.htmlEncode(versionInfo.rr_update_url)
         ),
       });
     }

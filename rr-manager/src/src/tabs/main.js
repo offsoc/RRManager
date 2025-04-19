@@ -12,22 +12,22 @@ export default Ext.define('SYNOCOMMUNITY.RRManager.Overview.Main', {
     });
   },
 
-  handleFileUpload: function (jsonData, rrManagerConfig) {
-    const handleUpload = (data) => {
-      this.apiProvider._handleFileUpload(data)
-        .then(() => {
-          this.showMsg(this.helper.V('ui', 'rr_config_applied'));
-          this.appWin.clearStatusBusy();
-        })
-        .catch(() => {
-          this.showMsg(this.helper.V('ui', 'rr_config_apply_error'));
-          this.appWin.clearStatusBusy();
-        });
+  handleFileUpload: async function (jsonData, rrManagerConfig) {
+    const handleUpload = async (data) => {
+      try {
+        await this.apiProvider._handleFileUpload(data);
+        this.showMsg(this.helper.V('ui', 'rr_config_applied'));
+      } catch (e) {
+        this.showMsg(this.helper.V('ui', 'rr_config_apply_error'));
+      } finally {
+        this.appWin.clearStatusBusy();
+      }
     };
 
-    if (jsonData) handleUpload(jsonData);
-    if (rrManagerConfig) handleUpload(rrManagerConfig);
-  },
+    if (jsonData) await handleUpload(jsonData);
+    if (rrManagerConfig) await handleUpload(rrManagerConfig);
+  }
+  ,
   constructor: function (e) {
     this.installed = false;
     this.appWin = e.appWin;
@@ -212,6 +212,7 @@ export default Ext.define('SYNOCOMMUNITY.RRManager.Overview.Main', {
         var isModernDSM = systemInfo.version_string.includes('7.2.2');
         self.apiProvider.setIsModernDSM(isModernDSM);
 
+        await self.__checkDownloadFolder();
         if (systemInfo && packages) {
           self.rrCheckVersion = rrCheckVersion;
           //TODO: implement localization

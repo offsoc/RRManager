@@ -122,7 +122,7 @@ export default Ext.define('SYNOCOMMUNITY.RRManager.Setting.Main', {
     var user_config = this.getParams();
     var rrConfigJson = localStorage.getItem('rrConfig');
     var rrConfigOrig = JSON.parse(rrConfigJson);
-    var rrManagerConfigJson = localStorage.getItem('rrConfig');
+    var rrManagerConfigJson = localStorage.getItem('rrManagerConfig');
     var rrManagerConfigOrig = JSON.parse(rrManagerConfigJson);
     rrConfigOrig.user_config = user_config;
     localStorage.setItem('rrConfig', JSON.stringify(rrConfigOrig));
